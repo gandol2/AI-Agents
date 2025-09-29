@@ -21,7 +21,25 @@ class MyFirstFlow(Flow):
     def final(self):
         print(":)")
 
+    @router(final)
+    def route(self):
+        a = 2
+        if a == 2:
+            return 'even'
+        else:
+            return 'odd'
+
+    @listen('even')
+    def handle_even(self):
+        print("Even")
+
+    @listen('odd')
+    def handle_odd(self):
+        print("Odd")
+
+
+
 flow = MyFirstFlow()
 
-#flow.plot() # 플로우 다이어그램 그리기 -> html 파일로 저장됨
+flow.plot() # 플로우 다이어그램 그리기 -> html 파일로 저장됨
 flow.kickoff()
