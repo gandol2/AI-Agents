@@ -30,7 +30,7 @@ job_matching_task:
 
     기존 채용 공고 필드는 절대 수정하거나 제거하지 않습니다.
   expected_output: >
-    원본 `JobList` 스키마와 동일한 JSON 객체. 단, 각 공고에 두 개의 추가 필드 포함:
+    원본 `Job` 스키마와 동일한 JSON 객체. 단, 각 공고에 두 개의 추가 필드 포함:
     - match_score: 1~5 정수
     - reason: 점수 근거에 대한 짧은 설명
   agent: job_matching_agent
