@@ -1,54 +1,78 @@
 from crewai.flow.flow import Flow, listen, start, router, and_, or_
 from pydantic import BaseModel
 
-class MyFirstFlowState(BaseModel):
-    user_id: int = 1
-    is_admin: bool = True
+class ContentPiplineFlowState(BaseModel):
 
+    # Inputs
+    content_type: str = ""
+    topic: str = ""
 
-class MyFirstFlow(Flow[MyFirstFlowState]):
+    # Internal
+    max_length: int = 0
+
+class ContentPiplineFlow(Flow[ContentPiplineFlowState]):
 
     @start()
-    def first(self):
-        # self.state["whatever"] = 1
-        print(self.state.user_id)
-        print("Hello")
+    def init_content_pipline(self):
+        if self.state.content_type not in ["tweet", "blog", "linkedin"]:
+            raise ValueError(f"알수 없는 콘텐츠 타입 입니다 : {self.state.content_type}")
 
-    
-    @listen(first)
-    def second(self):
-        # print(self.state["whatever"])
-        print("World")
+        if self.topic == "":
+            raise ValueError(f"토픽이 비어있습니다 : {self.state.topic}")
 
-    @listen(first)
-    def third(self):
-        print(" !! ")
+        if self.state.content_type == "tweet":
+            self.state.max_length = 150
+        elif self.state.content_type == "blog":
+            self.state.max_length = 800
+        elif self.state.content_type == "linkedin":
+            self.state.max_length = 500
 
-    @listen(and_(second, third))
-    def final(self):
-        # self.state["whatever"] = 2
-        self.state.user_id = 2
-        print(":)")
+    @listen(init_content_pipline)
+    def conduct_research(self):
+        print("콘텐츠를 찾는중 입니다...")
+        return True
 
-    @router(final)
-    def route(self):
-        a = self.state.user_id
-        if a == 2:
-            return 'even'
+    @router(conduct_research)
+    def router(self):
+        content_type = self.state.content_type
+
+        if content_type == "tweet":
+            return "make_tweet"
+        elif content_type == "blog":
+            return "make_blog"
+        elif content_type == "linkedin":
+            return "make_linkedin_post"
         else:
-            return 'odd'
+            raise ValueError(f"알수 없는 콘텐츠 타입 입니다 : {content_type}")
 
-    @listen('even')
-    def handle_even(self):
-        print("Even")
+    @listen("make_blog")
+    def handle_make_blog(self):
+        print("블로그 콘텐츠를 만드는중 입니다...")
+    
+    @listen("make_tweet")
+    def handle_make_tweet(self):
+        print("트윗 콘텐츠를 만드는중 입니다...")
+    
+    @listen("make_linkedin_post")
+    def handle_make_linkedin_post(self):
+        print("링크드인 콘텐츠를 만드는중 입니다...")
 
-    @listen('odd')
-    def handle_odd(self):
-        print("Odd")
+    @listen(handle_make_blog)
+    def check_seo(self):
+        print("[블로그] SEO 체크중 입니다...")
+
+    @listen(or_(handle_make_tweet, handle_make_linkedin_post))
+    def check_virality(self):
+        print("[트윗, 링크드인] 화제성 체크중 입니다...")
+
+    @listen(or_(check_seo, check_virality))
+    def finalize_content(self):
+        print("콘텐츠를 완성하는중 입니다...")
 
 
-
-flow = MyFirstFlow()
-
-flow.plot() # 플로우 다이어그램 그리기 -> html 파일로 저장됨
-flow.kickoff()
+flow = ContentPiplineFlow()
+flow.plot()
+# flow.kickoff({
+#     "content_type": "tweet",
+#     "topic": "AI dog image",
+# })
