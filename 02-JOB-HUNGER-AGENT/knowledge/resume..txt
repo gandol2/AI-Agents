@@ -1,0 +1,84 @@
+# Juan Srisaiwong
+**Full Stack Developer**
+
+📧 juan.srisaiwong@email.com | 📱 +34 612 345 678  
+🌐 LinkedIn: linkedin.com/srisaiwong | GitHub: github.com/srisaiwong  
+📍 코펜하겐, 덴마크
+
+---
+
+## Professional Summary
+
+3년간 확장 가능한 웹 애플리케이션과 현대적인 사용자 인터페이스를 구축한 경험을 가진 열정적인 Full Stack Developer. React, Node.js 및 클라우드 기술을 포함한 JavaScript 생태계에 능숙. 문제 해결 능력이 뛰어나며 협업을 통해 고품질 소프트웨어 솔루션을 제공하는 데 강점이 있음.
+
+---
+
+## Technical Skills
+
+**Frontend:** React, Vue.js, HTML5, CSS3, Sass, TypeScript, JavaScript (ES6+), Bootstrap, Tailwind CSS  
+**Backend:** Node.js, Express.js, Python, Django, RESTful APIs, GraphQL  
+**Databases:** PostgreSQL, MySQL, MongoDB, Redis  
+**Cloud & DevOps:** AWS (EC2, S3, Lambda), Docker, CI/CD, Git, GitHub Actions  
+**Tools:** VS Code, Postman, Figma, Jira, Slack
+
+---
+
+## Professional Experience
+
+### Full Stack Developer
+**TechSolutions Madrid** | 마드리드, 스페인 | *2022년 3월 - 현재*
+
+- React와 Node.js를 사용하여 10,000명 이상의 사용자를 대상으로 한 웹 애플리케이션 5개 이상 개발 및 유지 보수
+- 반응형 디자인을 구현하여 모바일 사용자 참여도 40% 향상
+- RESTful APIs를 구축하고 서드파티 서비스를 통합하여 데이터 처리 속도 25% 단축
+- Agile 방법론을 활용하여 다기능 팀과 협업
+- 데이터베이스 쿼리를 최적화하여 페이지 로딩 속도 30% 개선
+
+### Junior Full Stack Developer
+**StartupLab Barcelona** | 바르셀로나, 스페인 | *2021년 6월 - 2022년 2월*
+
+- Vue.js와 Express.js를 사용하여 e-commerce 플랫폼 개발에 기여
+- 사용자 인증 및 권한 부여 시스템 구현
+- 코드 리뷰에 참여하고 높은 코드 품질 표준 유지
+- 사용자 피드백을 기반으로 버그 수정 및 신규 기능 구현
+- 배포 프로세스 및 서버 유지 보수 지원
+
+---
+
+## Education
+
+### 컴퓨터공학 학사
+**마드리드 폴리테크닉 대학교 (Universidad Politécnica de Madrid)** | 마드리드, 스페인 | *2017 - 2021*
+
+**관련 과목:** Data Structures, Algorithms, Database Systems, Software Engineering, Web Development
+
+---
+
+## Projects
+
+### E-Commerce Dashboard
+*React, Node.js, PostgreSQL, AWS*
+- 제품, 주문, 고객을 관리할 수 있는 종합 관리자 대시보드 구축
+- 실시간 분석 및 리포팅 기능 구현
+- 자동화된 CI/CD 파이프라인을 통해 AWS에 배포
+
+### Task Management App
+*Vue.js, Express.js, MongoDB*
+- 실시간 업데이트가 가능한 협업형 작업 관리 애플리케이션 개발
+- 사용자 인증 및 역할 기반 권한 부여 통합
+- Drag-and-drop 기능과 알림 시스템 구현
+
+---
+
+## Languages
+
+**스페인어:** 원어민  
+**영어:** 전문 수준 (C1)  
+**카탈루냐어:** 회화 가능 (B2)
+
+---
+
+## Certifications
+
+- AWS Certified Developer - Associate (2023)  
+- React Developer Certification - Meta (2022)
