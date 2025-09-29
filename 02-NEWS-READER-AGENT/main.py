@@ -5,6 +5,7 @@ dotenv.load_dotenv()
 # https://docs.crewai.com/ko/introduction
 from crewai import Agent, Crew, Task
 from crewai.project import CrewBase, agent, task, crew
+from tools import count_letters
 
 @CrewBase
 class 번역Crew:
@@ -13,6 +14,10 @@ class 번역Crew:
     def 번역_agent(self):
         return Agent(config=self.agents_config["번역_agent"])
 
+    @agent
+    def counter_agent(self):
+        return Agent(config=self.agents_config["counter_agent"], tools=[count_letters])
+
     # https://docs.crewai.com/ko/concepts/tasks
     @task
     def 번역_task(self):    
@@ -20,13 +25,13 @@ class 번역Crew:
             config=self.tasks_config["번역_task"],
         )
 
+    # @task
+    # def 재번역_task(self):    
+    #     return Task( config=self.tasks_config["재번역_task"], )
+
     @task
-    def 재번역_task(self):    
-        return Task(
-            
-            config=self.tasks_config["재번역_task"],
-            
-        )
+    def count_task(self):    
+        return Task( config=self.tasks_config["count_task"], )
 
     @crew
     def 번역_crew(self):
