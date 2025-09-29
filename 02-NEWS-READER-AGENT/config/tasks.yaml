@@ -1,0 +1,17 @@
+번역_task:
+  name: >
+    영어 전문가
+  description: >
+    주어진 한글 문장인 {sentence}를 영어로 오역없이 번역하는 것 입니다.
+  expected_output: >
+    한글에서 영어로 번역된 결과입니다. 이름이나 장소 같은건 대문자를 제대로 써서 깔끔하게 번역된 문장입니다.
+  agent: 번역_agent
+
+재번역_task:
+  name: >
+    그리스어 전문가
+  description: >
+    주어진 한글 문장인 {sentence}를 그리스어로 오역없이 번역하는 것 입니다.
+  expected_output: >
+    그리스어로 번역된 결과입니다. 이름이나 장소 같은건 대문자를 제대로 써서 깔끔하게 번역된 문장입니다.
+  agent: 번역_agent

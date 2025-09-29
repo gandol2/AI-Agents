@@ -4,15 +4,36 @@ dotenv.load_dotenv()
 
 # https://docs.crewai.com/ko/introduction
 from crewai import Agent, Crew, Task
-from crewai.project import CrewBase, agent, task
+from crewai.project import CrewBase, agent, task, crew
 
 @CrewBase
 class 번역Crew:
     # https://docs.crewai.com/ko/concepts/agents
     @agent
     def 번역_agent(self):
-        return Agent(
-            goal="사람들이 헷갈리지 않게 잘 번역하는 번역가가 되는 것",
-            role="한글을 영어로 번역하는 번역가가 되는거야"
-            backstory="너는 미국에서 태어나서 자란 한국인이야. 두 언어 모두 잘하고 문화적 차이도 잘 이해를 하고있지.",
+        return Agent(config=self.agents_config["번역_agent"])
+
+    # https://docs.crewai.com/ko/concepts/tasks
+    @task
+    def 번역_task(self):    
+        return Task(
+            config=self.tasks_config["번역_task"],
         )
+
+    @task
+    def 재번역_task(self):    
+        return Task(
+            
+            config=self.tasks_config["재번역_task"],
+            
+        )
+
+    @crew
+    def 번역_crew(self):
+        return Crew(
+            agents=self.agents,
+            tasks=self.tasks,
+            verbose=True,
+        )
+
+번역Crew().번역_crew().kickoff(inputs={"sentence": "안녕하세요. 저는 홍길동입니다. 나는 부산 어린이 대공원에서 자전거를 타는것을 좋아합니다."})
