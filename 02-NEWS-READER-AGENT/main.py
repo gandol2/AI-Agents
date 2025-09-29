@@ -2,43 +2,66 @@ import dotenv
 
 dotenv.load_dotenv()
 
-# https://docs.crewai.com/ko/introduction
-from crewai import Agent, Crew, Task
+from crewai import Crew, Agent, Task
 from crewai.project import CrewBase, agent, task, crew
-from tools import count_letters
+from tools import search_tool, scrap_tool
+
 
 @CrewBase
-class 번역Crew:
-    # https://docs.crewai.com/ko/concepts/agents
-    @agent
-    def 번역_agent(self):
-        return Agent(config=self.agents_config["번역_agent"])
+class NewsReaderAgent:
 
     @agent
-    def counter_agent(self):
-        return Agent(config=self.agents_config["counter_agent"], tools=[count_letters])
-
-    # https://docs.crewai.com/ko/concepts/tasks
-    @task
-    def 번역_task(self):    
-        return Task(
-            config=self.tasks_config["번역_task"],
+    def news_hunter_agent(self):
+        return Agent(
+            config=self.agents_config["news_hunter_agent"],
+            tools=[search_tool, scrap_tool],
         )
 
-    # @task
-    # def 재번역_task(self):    
-    #     return Task( config=self.tasks_config["재번역_task"], )
+    @agent
+    def summarizer_agent(self):
+        return Agent(
+            config=self.agents_config["summarizer_agent"],
+            tools=[scrap_tool],
+        )
+
+    @agent
+    def curator_agent(self):
+        return Agent(
+            config=self.agents_config["curator_agent"],
+        )
 
     @task
-    def count_task(self):    
-        return Task( config=self.tasks_config["count_task"], )
+    def content_harvesting_task(self):
+        return Task(
+            config=self.tasks_config["content_harvesting_task"],
+        )
+
+    @task
+    def summarization_task(self):
+        return Task(
+            config=self.tasks_config["summarization_task"],
+        )
+
+    @task
+    def final_report_assembly_task(self):
+        return Task(
+            config=self.tasks_config["final_report_assembly_task"],
+        )
 
     @crew
-    def 번역_crew(self):
+    def crew(self):
         return Crew(
-            agents=self.agents,
             tasks=self.tasks,
+            agents=self.agents,
             verbose=True,
         )
 
-번역Crew().번역_crew().kickoff(inputs={"sentence": "안녕하세요. 저는 홍길동입니다. 나는 부산 어린이 대공원에서 자전거를 타는것을 좋아합니다."})
+
+result = NewsReaderAgent().crew().kickoff(
+    inputs={
+        "topic": "우크라이나 러시아 전쟁 상황",
+    }
+)
+
+# for task_output in result.task_output:
+#     print(task_output)
