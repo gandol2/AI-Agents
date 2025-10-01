@@ -33,6 +33,9 @@ if "session" not in st.session_state:
     st.session_state["session"] = SQLiteSession("chat-history", "chat-gpt-clone-memory.db")
 session = st.session_state["session"]
 
+if "agent" not in st.session_state:
+    st.session_state["agent"] = triage_agent
+
 async def paint_history():
     messages = await session.get_items()
     for message  in messages:
@@ -57,17 +60,29 @@ async def run_agent(message):
         try: 
 
             stream = Runner.run_streamed(
-                    triage_agent,
+                    st.session_state["agent"],
                     message, 
                     session=session,
                     context=user_account_context
                 )
             async for event in stream.stream_events():
+            
                 if event.type == "raw_response_event":
 
                     if event.data.type == "response.output_text.delta":    
                         response += event.data.delta                                
                         text_placeholder.write(response)
+
+                elif event.type == "agent_updated_stream_event":
+                    if st.session_state['agent'].name != event.new_agent.name:
+                        st.write(f"🤖 Transfer from {st.session_state['agent'].name} to {event.new_agent.name}")
+                        st.session_state["agent"] = event.new_agent
+
+                        text_placeholder = st.empty()
+                        response = ""
+
+
+
         except InputGuardrailTripwireTriggered:
             text_placeholder.empty()
             st.write("그건 도와 드릴 수 없습니다.")
