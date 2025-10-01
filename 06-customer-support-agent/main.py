@@ -89,6 +89,10 @@ async def run_agent(message):
             st.write("이 요청은 저희 서비스 범위를 벗어난 요청입니다.")
 
 
+# message = st.chat_input(
+#     "Write a message for your assistant",
+# )
+
 message = st.chat_input(
     "Write a message for your assistant",
 )
