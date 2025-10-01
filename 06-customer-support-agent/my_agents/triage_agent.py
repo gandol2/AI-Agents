@@ -1,11 +1,15 @@
 import streamlit as st
-
-from agents import Agent, RunContextWrapper, input_guardrail, Runner, GuardrailFunctionOutput, handoff
+from agents import (
+    Agent,
+    RunContextWrapper,
+    input_guardrail,
+    Runner,
+    GuardrailFunctionOutput,
+    handoff,
+)
 from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
 from agents.extensions import handoff_filters
 from models import UserAccountContext, InputGuardRailOutput, HandoffData
-
-
 from my_agents.account_agent import account_agent
 from my_agents.technical_agent import technical_agent
 from my_agents.order_agent import order_agent
@@ -15,23 +19,37 @@ from my_agents.billing_agent import billing_agent
 input_guardrail_agent = Agent(
     name="Input Guardrail Agent",
     instructions="""
-        Ensure the user's request specifically pertains to User Account details, Billing inquiries, Order information, or Technical Support issues, and is not off-topic. If the request is off-topic, return a reason for the tripwire. You can make small conversation with the user, specially at the beginning of the conversation, but don't help with requests that are not related to User Account details, Billing inquiries, Order information, or Technical Support issues.
-    """,
+    Ensure the user's request specifically pertains to User Account details, Billing inquiries, Order information, or Technical Support issues, and is not off-topic. If the request is off-topic, return a reason for the tripwire. You can make small conversation with the user, specially at the beginning of the conversation, but don't help with requests that are not related to User Account details, Billing inquiries, Order information, or Technical Support issues.
+""",
     output_type=InputGuardRailOutput,
 )
 
+
 @input_guardrail
-async def off_topic_guardrail(wrapper: RunContextWrapper[UserAccountContext], agent: Agent[UserAccountContext], input: str):
-    result = await Runner.run(input_guardrail_agent, input, context=wrapper.context)
+async def off_topic_guardrail(
+    wrapper: RunContextWrapper[UserAccountContext],
+    agent: Agent[UserAccountContext],
+    input: str,
+):
+    result = await Runner.run(
+        input_guardrail_agent,
+        input,
+        context=wrapper.context,
+    )
+
     return GuardrailFunctionOutput(
         output_info=result.final_output,
         tripwire_triggered=result.final_output.is_off_topic,
-
     )
 
-def dynamic_triage_agent_instructions(wrapper: RunContextWrapper[UserAccountContext], agent: Agent[UserAccountContext]):
-    return  f"""
+
+def dynamic_triage_agent_instructions(
+    wrapper: RunContextWrapper[UserAccountContext],
+    agent: Agent[UserAccountContext],
+):
+    return f"""
     {RECOMMENDED_PROMPT_PREFIX}
+
 
     You are a customer support agent. You ONLY help customers with their questions about their User Account, Billing, Orders, or Technical Support.
     You call customers by their name.
@@ -85,44 +103,49 @@ def dynamic_triage_agent_instructions(wrapper: RunContextWrapper[UserAccountCont
     - Unclear issues: Ask 1-2 clarifying questions before routing
     """
 
-def handle_handoff(wrapper: RunContextWrapper[UserAccountContext], input_data: HandoffData):
+
+def handle_handoff(
+    wrapper: RunContextWrapper[UserAccountContext],
+    input_data: HandoffData,
+):
+
     with st.sidebar:
-        st.write(f"""
+        st.write(
+            f"""
             Handing off to {input_data.to_agent_name}
             Reason: {input_data.reason}
             Issue Type: {input_data.issue_type}
-            Description: {input_data.issue_description} 
-        """)
+            Description: {input_data.issue_description}
+        """
+        )
 
 
 def make_handoff(agent):
+
     return handoff(
-                agent=agent,
-                on_handoff=handle_handoff,
-                input_type=HandoffData,
-                input_filter=handoff_filters.remove_all_tools
-
-
-            )
-
+        agent=agent,
+        on_handoff=handle_handoff,
+        input_type=HandoffData,
+        input_filter=handoff_filters.remove_all_tools,
+    )
 
 
 triage_agent = Agent(
-    name = "Triage Agent",
-    instructions = dynamic_triage_agent_instructions,
-    input_guardrails=[off_topic_guardrail],
-
-    # Agent를 Tool로 사용하는 방법
+    name="Triage Agent",
+    instructions=dynamic_triage_agent_instructions,
+    input_guardrails=[
+        off_topic_guardrail,
+    ],
     # tools=[
-    #     account_agent.as_tool(tool_name="Account Management Agent", description="Handle account access, security, and profile management issues."),
-    #     technical_agent.as_tool(tool_name="Technical Support Agent", description="Solve technical issues with our products and services."),
-    #     order_agent.as_tool(tool_name="Order Management Agent", description="Handle order status, shipping, returns, and delivery issues."),
-    #     billing_agent.as_tool(tool_name="Billing Support Agent", description="Resolve billing, payment, and subscription issues."),
-    # ],
+    #     technical_agent.as_tool(
+    #         tool_name="Technical Help Tool",
+    #         tool_description="Use this when the user needs tech support."
+    #     )
+    # ]
     handoffs=[
-        make_handoff(account_agent),
         make_handoff(technical_agent),
-        make_handoff(order_agent),
         make_handoff(billing_agent),
-    ]
+        make_handoff(account_agent),
+        make_handoff(order_agent),
+    ],
 )

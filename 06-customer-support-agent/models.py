@@ -1,15 +1,25 @@
 from pydantic import BaseModel
+from typing import Optional
+
 
 class UserAccountContext(BaseModel):
 
     customer_id: int
     name: str
-    email: str
-    tier: str = "basic" # primium, enterprise
+    tier: str = "basic"
+    email: Optional[str] = None  # premium entreprise
+
 
 class InputGuardRailOutput(BaseModel):
 
     is_off_topic: bool
+    reason: str
+
+class TechnicalOutputGuardRailOutput(BaseModel):
+
+    contains_off_topic: bool
+    contains_billing_data: bool
+    contains_account_data: bool
     reason: str
 
 
