@@ -8,9 +8,11 @@ from agents import (
     Runner, 
     SQLiteSession, 
     function_tool,
-    RunContextWrapper
+    RunContextWrapper,
+    InputGuardrailTripwireTriggered
 )
 from models import UserAccountContext
+from my_agents.triage_agent import triage_agent
 
 # @function_tool
 # def get_user_tier(wrapper: RunContextWrapper[UserAccountContext]):
@@ -21,6 +23,7 @@ client = OpenAI()
 user_account_context = UserAccountContext(
     customer_id=1,
     name="슈터시기",
+    email="shuter@gmail.com",
     tier="basic"
 )
 
@@ -39,31 +42,35 @@ async def paint_history():
                     st.write(message["content"])                    
                 else:
                     if message["type"] == "message":
-                        st.write(message["content"][0]["text"].replace("$", "\$"))
+                        st.write(message["content"][0]["text"])
 
 asyncio.run(paint_history())
 
 
 async def run_agent(message):
     with st.chat_message("ai"):  
-        status_container = st.status("⌛ 생각중...", expanded=False)
         text_placeholder = st.empty()
         response = ""
 
         st.session_state["text_placeholder"] = text_placeholder
 
-        stream = Runner.run_streamed(
-                agent,
-                message, 
-                session=session,
-                context=user_account_context
-            )
-        async for event in stream.stream_events():
-            if event.type == "raw_response_event":
+        try: 
 
-                if event.data.type == "response.output_text.delta":    
-                    response += event.data.delta                                
-                    text_placeholder.write(response)
+            stream = Runner.run_streamed(
+                    triage_agent,
+                    message, 
+                    session=session,
+                    context=user_account_context
+                )
+            async for event in stream.stream_events():
+                if event.type == "raw_response_event":
+
+                    if event.data.type == "response.output_text.delta":    
+                        response += event.data.delta                                
+                        text_placeholder.write(response)
+        except InputGuardrailTripwireTriggered:
+            text_placeholder.empty()
+            st.write("그건 도와 드릴 수 없습니다.")
 
                 
 
