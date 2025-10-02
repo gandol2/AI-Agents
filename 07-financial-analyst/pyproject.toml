@@ -16,4 +16,5 @@ dependencies = [
 [dependency-groups]
 dev = [
     "watchdog>=6.0.0",
+    "ipykernel>=6.30.0",
 ]
