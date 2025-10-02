@@ -24,5 +24,4 @@ news_analyst = Agent(
     tools=[
         web_search_tool,
     ],
-    output_key="NewsAnalyst_result",
-)
+    output_key="data_news_analyst_result",)
