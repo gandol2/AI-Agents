@@ -1,9 +1,9 @@
+from firecrawl import FirecrawlApp, ScrapeOptions
+import os
+import re
 import dotenv
 
 dotenv.load_dotenv()
-import re
-import os
-from firecrawl import FirecrawlApp, ScrapeOptions
 
 
 def web_search_tool(query: str):
