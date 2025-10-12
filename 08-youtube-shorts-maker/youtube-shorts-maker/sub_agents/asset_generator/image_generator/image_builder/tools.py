@@ -42,7 +42,7 @@ async def generate_images(tool_context: ToolContext):
             model="gpt-image-1",
             prompt=enhanced_prompt,
             n=1,
-            quality="low",
+            quality="auto",
             moderation="low",
             output_format="jpeg",
             background="opaque",
