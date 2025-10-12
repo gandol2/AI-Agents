@@ -1,0 +1,7 @@
+{
+  "dependencies": ["langchain_openai", "./main.py"],
+  "env": "./.env",
+  "graphs": {
+    "mr_poet": "./main.py:graph"
+  }
+}
